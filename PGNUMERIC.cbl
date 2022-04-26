@@ -19,6 +19,7 @@
            05 WS-MSK-INTEIRO-3             PIC ********9.
            05 WS-MSK-DECIMAL-1             PIC ***,***,**9.99.
            05 WS-MSK-DECIMAL-2             PIC ZZZ,ZZZ,ZZ9.99.
+           05 WS-MSK-DECIMAL-3             PIC ---,---,--9.99.
            05 WS-MSK-VALOR-1               PIC ---,---,--9.99.
            05 WS-MSK-VALOR-2               PIC $$$,$$$,$$9.99.
 
@@ -112,19 +113,23 @@
                                       WS-MSK-INTEIRO-2
                                       WS-MSK-INTEIRO-3.
            MOVE    WS-NUM-DECIMAL TO WS-MSK-DECIMAL-1
-                                     WS-MSK-DECIMAL-2.
+                                     WS-MSK-DECIMAL-2
+                                     WS-MSK-DECIMAL-3.
            MOVE    WS-NUM-VALOR   TO WS-MSK-VALOR-1
                                      WS-MSK-VALOR-2.
-
+           DISPLAY 'WS-NUM-INTEIRO DIGITADO: ' WS-NUM-INTEIRO.
            DISPLAY 'WS-MSK-INTEIRO-1: ' WS-MSK-INTEIRO-1.
            DISPLAY 'WS-MSK-INTEIRO-2: ' WS-MSK-INTEIRO-2.
-           DISPLAY 'WS-MSK-INTEIRO-3: ' WS-MSK-INTEIRO-2.
+           DISPLAY 'WS-MSK-INTEIRO-3: ' WS-MSK-INTEIRO-3.
 
+           DISPLAY 'WS-NUM-DECIMAL DIGITADO: ' WS-NUM-DECIMAL.
            DISPLAY 'WS-MSK-DECIMAL-1: ' WS-MSK-DECIMAL-1.
            DISPLAY 'WS-MSK-DECIMAL-2: ' WS-MSK-DECIMAL-2.
+           DISPLAY 'WS-MSK-DECIMAL-3: ' WS-MSK-DECIMAL-3.
 
-           DISPLAY 'WS-MSK-DECIMAL-1: ' WS-MSK-VALOR-1.
-           DISPLAY 'WS-MSK-DECIMAL-2: ' WS-MSK-VALOR-2.
+           DISPLAY 'WS-NUM-VALOR DIGITADO: ' WS-NUM-VALOR.
+           DISPLAY 'WS-MSK-VALOR-1:   ' WS-MSK-VALOR-1.
+           DISPLAY 'WS-MSK-VALOR-2:   ' WS-MSK-VALOR-2.
 
            PERFORM P100-INICIO         THRU P100-INICIO-FIM.
        P200-PROCESSA03-FIM.
