@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTC.
+       PROGRAM-ID. CADCONTA.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -41,15 +41,15 @@
        77  WS-EXIT                     PIC X.
            88 WS-EXIT-OK               VALUE 'S' FALSE 'N'.
 
+       77  WS-AUX-ALTERA               PIC X.
+           88 WS-AUX-ALTERA-OK         VALUE 'S' FALSE 'N'.
+
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-
            PERFORM P100-INICIO     THRU P100-INICIO-FIM.
            PERFORM P200-PROCESSA   THRU P200-PROCESSA-FIM
                    UNTIL WS-EXIT-OK.
-           PERFORM P420-FECHA-ARQ  THRU P420-FECHA-ARQ-FIM.
            PERFORM P900-FINALIZA   THRU P900-FINALIZA-FIM.
-
        MAIN-PROCEDURE-FIM.
 
        P100-INICIO.
@@ -60,8 +60,9 @@
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
            SET WS-EXIT-OK              TO FALSE.
+           SET WS-AUX-ALTERA-OK        TO FALSE.
 
-           DISPLAY '*** CONSULTA DE CONTATOS***'
+           DISPLAY '*** ALTERACAO DE CONTATOS***'
            END-DISPLAY.
            PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.
@@ -78,7 +79,7 @@
        P200-PROCESSA-FIM.
 
        P400-ABRE-ARQ.
-           OPEN INPUT CONTATOS.
+           OPEN I-O CONTATOS.
       *VE SE O ARQUIVO EXISTE, ENCERRA O PROGRAMA.
            IF NOT WS-FS-OK THEN
                PERFORM P800-ERRO       THRU P800-ERRO-FIM
@@ -114,18 +115,46 @@
            DISPLAY 'ID DO CONTATO..: ' WS-ID-CONTATO
                    ' - NOME DO CONTATO: ' WS-NM-CONTATO
            END-DISPLAY.
+           DISPLAY 'DESEJA ALTERAR O NOME DO CONTATO?'
+           END-DISPLAY.
+           ACCEPT WS-AUX-ALTERA
+           END-ACCEPT.
+           IF WS-AUX-ALTERA-OK THEN
+               PERFORM P460-ALTERA-REGISTRO
+                       THRU P460-ALTERA-REGISTRO-FIM
+           END-IF.
        P440-MOSTRA-REGISTRO-FIM.
 
        P450-REG-NAO-LOCALIZADO.
            DISPLAY 'CONTATO NAO LOCALIZADO.'
+                   'TENTE UM CODIGO VALIDO.'
            END-DISPLAY.
        P450-REG-NAO-LOCALIZADO-FIM.
 
-       P800-ERRO.
-           DISPLAY 'ERRO DE LEITURA. ARQUIVO NAO EXISTE.'
+       P460-ALTERA-REGISTRO.
+           DISPLAY 'DIGIGTE O NOVO NOME DO CONTATO: '
            END-DISPLAY.
+           ACCEPT NM-CONTATO
+           END-ACCEPT.
+           REWRITE REG-CONTATOS
+               INVALID KEY
+                   PERFORM P800-ERRO   THRU P800-ERRO-FIM
+               NOT INVALID KEY
+                   DISPLAY 'CONTATO ALTERADO COM SUCESSO.'
+                   END-DISPLAY
+           END-REWRITE.
+       P460-ALTERA-REGISTRO-FIM.
+
+       P800-ERRO.
            DISPLAY 'FILE STATUS: ' WS-FS
            END-DISPLAY.
+           IF WS-FS = 35
+               DISPLAY 'ERRO. NAO ACHOU O ARQUIVO.'
+               END-DISPLAY
+           ELSE
+               DISPLAY 'NAO FOI POSSIVEL ATUALIZAR O REGISTRO.'
+               END-DISPLAY
+           END-IF
            PERFORM P900-FINALIZA  THRU P900-FINALIZA-FIM.
        P800-ERRO-FIM.
 
@@ -137,4 +166,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTC.
+       END PROGRAM CADCONTA.

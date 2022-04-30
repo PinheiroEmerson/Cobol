@@ -61,6 +61,7 @@
 
            DISPLAY '*** CADASTRO DE CONTATOS***'
            END-DISPLAY.
+           PERFORM P400-ABRE-ARQ THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.
 
        P200-PROCESSA.
@@ -74,10 +75,8 @@
            END-DISPLAY.
            ACCEPT WS-NM-CONTATO
            END-ACCEPT.
-
-           PERFORM P400-ABRE-ARQ THRU P400-ABRE-ARQ-FIM.
-           PERFORM P420-FECHA-ARQ THRU P420-FECHA-ARQ-FIM.
-
+           PERFORM P410-GRAVA-REGISTRO THRU
+                   P410-GRAVA-REGISTRO-FIM
            DISPLAY 'TECLE: '
                    '<QUALQUER TECLA> PARA CONTINUAR, OU'
                    '<S> PARA SAIR'
@@ -93,15 +92,6 @@
            IF NOT WS-FS-OK THEN
                OPEN OUTPUT CONTATOS
            END-IF.
-
-      *SE O ARQUIVO EXISTE VE O RESTANTE
-           IF WS-FS-OK THEN
-               PERFORM P410-GRAVA-REGISTRO THRU
-                       P410-GRAVA-REGISTRO-FIM
-           ELSE
-               PERFORM P800-ERRO THRU P800-ERRO-FIM
-           END-IF.
-
        P400-ABRE-ARQ-FIM.
 
        P410-GRAVA-REGISTRO.
@@ -123,12 +113,12 @@
            END-DISPLAY.
            DISPLAY 'FILE STATUS: ' WS-FS
            END-DISPLAY.
-           PERFORM P420-FECHA-ARQ THRU P420-FECHA-ARQ-FIM.
            PERFORM P900-FINALIZA  THRU P900-FINALIZA-FIM.
        P800-ERRO-FIM.
 
 
        P900-FINALIZA.
+           PERFORM P420-FECHA-ARQ THRU P420-FECHA-ARQ-FIM.
            DISPLAY 'FIM DO PROCESSAMENTO.'
            END-DISPLAY.
            GOBACK.

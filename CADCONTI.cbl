@@ -62,21 +62,19 @@
 
            DISPLAY '*** CADASTRO DE CONTATOS***'
            END-DISPLAY.
+           PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.
 
        P200-PROCESSA.
-
            PERFORM P430-MONTA-TELA THRU P430-MONTA-TELA-FIM.
-           PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
-           PERFORM P420-FECHA-ARQ  THRU P420-FECHA-ARQ-FIM.
-
+           PERFORM P410-GRAVA-REGISTRO THRU
+                   P410-GRAVA-REGISTRO-FIM
            DISPLAY 'TECLE: '
                    '<QUALQUER TECLA> PARA CONTINUAR, OU'
                    '<S> PARA SAIR'
            END-DISPLAY.
            ACCEPT WS-EXIT
            END-ACCEPT.
-
        P200-PROCESSA-FIM.
 
        P400-ABRE-ARQ.
@@ -85,15 +83,6 @@
            IF NOT WS-FS-OK THEN
                OPEN OUTPUT CONTATOS
            END-IF.
-
-      *SE O ARQUIVO EXISTE VE O RESTANTE
-           IF WS-FS-OK THEN
-               PERFORM P410-GRAVA-REGISTRO THRU
-                       P410-GRAVA-REGISTRO-FIM
-           ELSE
-               PERFORM P800-ERRO THRU P800-ERRO-FIM
-           END-IF.
-
        P400-ABRE-ARQ-FIM.
 
        P410-GRAVA-REGISTRO.
@@ -108,7 +97,6 @@
                    DISPLAY'CONTATO SALVO COM SUCESSO.'
                    END-DISPLAY
            END-WRITE.
-
        P410-GRAVA-REGISTRO-FIM.
 
        P420-FECHA-ARQ.
@@ -116,7 +104,6 @@
        P420-FECHA-ARQ-FIM.
 
        P430-MONTA-TELA.
-
            DISPLAY 'PARA REGISTRAR UM CONTATO, INFORME:'
            END-DISPLAY.
            DISPLAY 'UM NUMERO PARA ID: '
@@ -127,7 +114,6 @@
            END-DISPLAY.
            ACCEPT WS-NM-CONTATO
            END-ACCEPT.
-
        P430-MONTA-TELA-FIM.
 
        P800-ERRO.
@@ -135,12 +121,12 @@
            END-DISPLAY.
            DISPLAY 'FILE STATUS: ' WS-FS
            END-DISPLAY.
-           PERFORM P420-FECHA-ARQ THRU P420-FECHA-ARQ-FIM.
            PERFORM P900-FINALIZA  THRU P900-FINALIZA-FIM.
        P800-ERRO-FIM.
 
 
        P900-FINALIZA.
+           PERFORM P420-FECHA-ARQ THRU P420-FECHA-ARQ-FIM.
            DISPLAY 'FIM DO PROCESSAMENTO.'
            END-DISPLAY.
            GOBACK.
