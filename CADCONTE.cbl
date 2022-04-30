@@ -1,11 +1,11 @@
       ******************************************************************
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      27/04/2022.
-      * Purpose:   ALTERACAO DE CONTATOS.
+      * Purpose:   EXCLUI DE CONTATOS.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTA.
+       PROGRAM-ID. CADCONTE.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -42,7 +42,7 @@
            88 WS-EXIT-OK               VALUE 'S' FALSE 'N'.
 
        77  WS-AUX-ALTERA               PIC X.
-           88 WS-AUX-ALTERA-OK         VALUE 'S' FALSE 'N'.
+           88 WS-AUX-EXCLUI-OK         VALUE 'S' FALSE 'N'.
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -60,9 +60,9 @@
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
            SET WS-EXIT-OK              TO FALSE.
-           SET WS-AUX-ALTERA-OK        TO FALSE.
+           SET WS-AUX-EXCLUI-OK        TO FALSE.
 
-           DISPLAY '*** ALTERACAO DE CONTATOS***'
+           DISPLAY '*** EXCLUSAO DE CONTATOS***'
            END-DISPLAY.
            PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.
@@ -71,7 +71,7 @@
            PERFORM P430-MONTA-TELA     THRU P430-MONTA-TELA-FIM.
            PERFORM P410-LE-REGISTRO    THRU P410-LE-REGISTRO-FIM.
            DISPLAY 'TECLE: '
-                   '<QUALQUER TECLA> CONSULTA OUTRO CONTATO OU'
+                   '<QUALQUER TECLA> CONSULTA OUTRO CONTATO OU '
                    '<S> PARA SAIR'
            END-DISPLAY.
            ACCEPT WS-EXIT
@@ -115,15 +115,15 @@
            DISPLAY 'ID DO CONTATO..: ' WS-ID-CONTATO
                    ' - NOME DO CONTATO: ' WS-NM-CONTATO
            END-DISPLAY.
-           DISPLAY 'DESEJA ALTERAR O NOME DO CONTATO?'
+           DISPLAY 'DESEJA EXCLUIR O NOME DO CONTATO?'
            END-DISPLAY.
            ACCEPT WS-AUX-ALTERA
            END-ACCEPT.
-           IF WS-AUX-ALTERA-OK THEN
-               PERFORM P460-ALTERA-REGISTRO
-                       THRU P460-ALTERA-REGISTRO-FIM
+           IF WS-AUX-EXCLUI-OK THEN
+               PERFORM P460-EXCLUI-REGISTRO
+                       THRU P460-EXCLUI-REGISTRO-FIM
            ELSE
-               DISPLAY 'OS DADOS NAO FORAM ALTERADOS.'
+               DISPLAY 'OS DADOS NAO FORAM EXCLUIDOS.'
                END-DISPLAY
            END-IF.
        P440-MOSTRA-REGISTRO-FIM.
@@ -134,19 +134,16 @@
            END-DISPLAY.
        P450-REG-NAO-LOCALIZADO-FIM.
 
-       P460-ALTERA-REGISTRO.
-           DISPLAY 'DIGIGTE O NOVO NOME DO CONTATO: '
-           END-DISPLAY.
-           ACCEPT NM-CONTATO
-           END-ACCEPT.
-           REWRITE REG-CONTATOS
+       P460-EXCLUI-REGISTRO.
+           MOVE WS-ID-CONTATO TO ID-CONTATO.
+           DELETE CONTATOS
                INVALID KEY
                    PERFORM P800-ERRO   THRU P800-ERRO-FIM
                NOT INVALID KEY
-                   DISPLAY 'CONTATO ALTERADO COM SUCESSO.'
+                   DISPLAY 'CONTATO EXCLUIDO COM SUCESSO.'
                    END-DISPLAY
-           END-REWRITE.
-       P460-ALTERA-REGISTRO-FIM.
+           END-DELETE.
+       P460-EXCLUI-REGISTRO-FIM.
 
        P800-ERRO.
            DISPLAY 'FILE STATUS: ' WS-FS
@@ -155,7 +152,7 @@
                DISPLAY 'ERRO. NAO ACHOU O ARQUIVO.'
                END-DISPLAY
            ELSE
-               DISPLAY 'NAO FOI POSSIVEL ATUALIZAR O REGISTRO.'
+               DISPLAY 'NAO FOI POSSIVEL EXCLUIR O REGISTRO.'
                END-DISPLAY
            END-IF
            PERFORM P900-FINALIZA  THRU P900-FINALIZA-FIM.
@@ -169,4 +166,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTA.
+       END PROGRAM CADCONTE.
