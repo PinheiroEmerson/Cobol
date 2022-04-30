@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTT.
+       PROGRAM-ID. CADCONTI.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -146,4 +146,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTT.
+       END PROGRAM CADCONTI.
