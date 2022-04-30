@@ -43,7 +43,8 @@
                        AT  END
                            MOVE 'S' TO WS-END-OF-FILE
                        NOT AT END
-                           PERFORM P200-PROCESSA THRU P200-PROCESSA-FIM                   END-READ
+                           PERFORM P200-PROCESSA THRU P200-PROCESSA-FIM
+                   END-READ
            END-PERFORM.
 
            PERFORM P900-FINALIZA   THRU P900-FINALIZA-FIM.
@@ -51,29 +52,35 @@
        MAIN-PROCEDURE-FIM.
 
        P100-INICIO.
-           DISPLAY     'INICIO DO PROCESSAMENTO.'.
+           DISPLAY     'INICIO DO PROCESSAMENTO.'
+           END-DISPLAY.
            INITIALISE WS-DADOS WS-END-OF-FILE
                REPLACING NUMERIC      BY ZEROES
                          ALPHANUMERIC BY SPACES.
            SET WS-EOF TO FALSE.
            OPEN INPUT STUDENT.
-           DISPLAY 'ARQUIVO STUDENT FOI ABERTO. LENDO DADOS...'.
+           DISPLAY 'ARQUIVO STUDENT FOI ABERTO. LENDO DADOS...'
+           END-DISPLAY.
        P100-INICIO-FIM.
 
        P200-PROCESSA.
            DISPLAY 'CODIGO: ' WS-CD-STUDENT
-                   ' - NOME: ' WS-NM-STUDENT.
+                   ' - NOME: ' WS-NM-STUDENT
+           END-DISPLAY.
        P200-PROCESSA-FIM.
 
        P800-ERRO.
-           DISPLAY 'ERRO NO PROCESSAMENTO.'.
+           DISPLAY 'ERRO NO PROCESSAMENTO.'
+           END-DISPLAY.
            PERFORM P900-FINALIZA       THRU P900-FINALIZA-FIM.
        P800-ERRO-FIM.
 
 
        P900-FINALIZA.
-           DISPLAY 'FIM DO PROCESSAMENTO.'.
-           DISPLAY 'FECHANDO ARQUIVO STUDENT...'.
+           DISPLAY 'FIM DO PROCESSAMENTO.'
+           END-DISPLAY.
+           DISPLAY 'FECHANDO ARQUIVO STUDENT...'
+           END-DISPLAY.
            CLOSE STUDENT.
            GOBACK.
        P900-FINALIZA-FIM.
