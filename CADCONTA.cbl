@@ -122,6 +122,9 @@
            IF WS-AUX-ALTERA-OK THEN
                PERFORM P460-ALTERA-REGISTRO
                        THRU P460-ALTERA-REGISTRO-FIM
+           ELSE
+               DISPLAY 'OS DADOS NAO FORAM ALTERADOS.'
+               END-DISPLAY
            END-IF.
        P440-MOSTRA-REGISTRO-FIM.
 
