@@ -2,6 +2,7 @@
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      27/04/2022.
       * Purpose:   EXCLUI DE CONTATOS.
+      * Update:    TRANSFORMADO DE EXECUTAVEL EM MODULO.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
@@ -44,7 +45,13 @@
        77  WS-AUX-ALTERA               PIC X.
            88 WS-AUX-EXCLUI-OK         VALUE 'S' FALSE 'N'.
 
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01  LK-COM-AREA.
+           03 WS-COM-MENSAGEM          PIC X(40).
+
+       PROCEDURE DIVISION
+           USING LK-COM-AREA.
+
        MAIN-PROCEDURE.
            PERFORM P100-INICIO     THRU P100-INICIO-FIM.
            PERFORM P200-PROCESSA   THRU P200-PROCESSA-FIM
@@ -62,7 +69,7 @@
            SET WS-EXIT-OK              TO FALSE.
            SET WS-AUX-EXCLUI-OK        TO FALSE.
 
-           DISPLAY '*** EXCLUSAO DE CONTATOS***'
+           DISPLAY WS-COM-MENSAGEM
            END-DISPLAY.
            PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.
@@ -136,7 +143,7 @@
 
        P460-EXCLUI-REGISTRO.
            MOVE WS-ID-CONTATO TO ID-CONTATO.
-           DELETE CONTATOS
+           DELETE CONTATOS RECORD
                INVALID KEY
                    PERFORM P800-ERRO   THRU P800-ERRO-FIM
                NOT INVALID KEY

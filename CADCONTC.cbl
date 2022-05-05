@@ -2,6 +2,7 @@
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      27/04/2022.
       * Purpose:   CONSULTA DE CONTATOS.
+      * Update:    TRANSORMADO DE EXECUTAVEL EM MODULO.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
@@ -41,7 +42,13 @@
        77  WS-EXIT                     PIC X.
            88 WS-EXIT-OK               VALUE 'S' FALSE 'N'.
 
-       PROCEDURE DIVISION.
+       LINKAGE SECTION.
+       01  LK-COM-AREA.
+           03 WS-COM-MENSAGEM          PIC X(40).
+
+       PROCEDURE DIVISION
+           USING LK-COM-AREA.
+
        MAIN-PROCEDURE.
 
            PERFORM P100-INICIO     THRU P100-INICIO-FIM.
@@ -61,7 +68,7 @@
            SET WS-EOF-OK               TO FALSE.
            SET WS-EXIT-OK              TO FALSE.
 
-           DISPLAY '*** CONSULTA DE CONTATOS***'
+           DISPLAY WS-COM-MENSAGEM
            END-DISPLAY.
            PERFORM P400-ABRE-ARQ   THRU P400-ABRE-ARQ-FIM.
        P100-INICIO-FIM.

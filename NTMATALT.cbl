@@ -1,12 +1,12 @@
       ******************************************************************
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
-      * Date:      27/04/2022.
-      * Purpose:   ALTERACAO DE CONTATOS.
+      * Date:      04/05/2022.
+      * Purpose:   ALTERACAO DE MATERIAS.
       * Update:    TRANSFORMADO DE EXECUTAVEL EM MODULO.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTA.
+       PROGRAM-ID. NTMATALT.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -15,26 +15,26 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT CONTATOS
-           ASSIGN TO 'D:\My Documents\Cobol\Modulo3\bin\CONTATOS.DAT'
+           SELECT MATERIAS
+           ASSIGN TO
+               'D:\My Documents\Cobol\Modulo3\DesafioM3\MATERIAS.DAT'
            ORGANIZATION IS INDEXED
            ACCESS  MODE IS RANDOM
-           RECORD KEY IS ID-CONTATO
+           RECORD KEY IS ID-MATERIA
            FILE  STATUS IS WS-FS.
 
        DATA DIVISION.
        FILE SECTION.
-       FD  CONTATOS.
-           COPY FD_CONTT.
+       FD  MATERIAS.
+           COPY CFPK0002.
 
        WORKING-STORAGE SECTION.
-       77  WS-FS                       PIC 99.
-           88 WS-FS-OK                 VALUE 0.
 
-       01  WS-REGISTRO                 PIC X(22) VALUE SPACES.
-       01  FILLER REDEFINES WS-REGISTRO.
-           03 WS-ID-CONTATO            PIC 9(02).
-           03 WS-NM-CONTATO            PIC X(20).
+       01  WS-MATERIA                  PIC X(27) VALUE SPACES.
+       01  FILLER REDEFINES WS-MATERIA.
+           03 WS-ID-MATERIA            PIC 9(03).
+           03 WS-NM-MATERIA            PIC X(20).
+           03 WS-NT-APROVACAO          PIC 9(04)V99.
 
        77  WS-EOF                      PIC X.
            88 WS-EOF-OK                VALUE 'S' FALSE 'N'.
@@ -44,6 +44,9 @@
 
        77  WS-AUX-ALTERA               PIC X.
            88 WS-AUX-ALTERA-OK         VALUE 'S' FALSE 'N'.
+
+       77  WS-FS                       PIC 99.
+           88 WS-FS-OK                 VALUE 0.
 
        LINKAGE SECTION.
        01  LK-COM-AREA.
@@ -62,7 +65,7 @@
        P100-INICIO.
            DISPLAY 'INICIO DO PROCESSAMENTO.'
            END-DISPLAY.
-           INITIALISE WS-FS WS-REGISTRO
+           INITIALISE WS-FS WS-MATERIA
                REPLACING NUMERIC       BY ZEROES
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
@@ -76,84 +79,84 @@
 
        P200-PROCESSA.
            PERFORM P430-MONTA-TELA     THRU P430-MONTA-TELA-FIM.
-           PERFORM P410-LE-REGISTRO    THRU P410-LE-REGISTRO-FIM.
+           PERFORM P410-LE-MATERIA       THRU P410-LE-MATERIA-FIM.
            DISPLAY 'TECLE: '
-                   '<QUALQUER TECLA> CONSULTA OUTRO CONTATO OU'
-                   '<S> PARA SAIR'
+                   '<QUALQUER TECLA> CONSULTA OUTRO MATERIA OU'
+                   ' <S> PARA SAIR'
            END-DISPLAY.
            ACCEPT WS-EXIT
            END-ACCEPT.
        P200-PROCESSA-FIM.
 
        P400-ABRE-ARQ.
-           OPEN I-O CONTATOS.
+           OPEN I-O MATERIAS.
       *VE SE O ARQUIVO EXISTE, ENCERRA O PROGRAMA.
            IF NOT WS-FS-OK THEN
                PERFORM P800-ERRO       THRU P800-ERRO-FIM
            END-IF.
        P400-ABRE-ARQ-FIM.
 
-       P410-LE-REGISTRO.
-           READ CONTATOS INTO WS-REGISTRO
-               KEY IS ID-CONTATO
+       P410-LE-MATERIA.
+           READ MATERIAS INTO WS-MATERIA
+               KEY IS ID-MATERIA
                INVALID KEY
                    PERFORM P450-REG-NAO-LOCALIZADO
                            THRU    P450-REG-NAO-LOCALIZADO-FIM
                NOT INVALID KEY
-                   PERFORM P440-MOSTRA-REGISTRO
-                           THRU P440-MOSTRA-REGISTRO
+                   PERFORM P440-MOSTRA-MATERIA
+                           THRU P440-MOSTRA-MATERIA
            END-READ.
-       P410-LE-REGISTRO-FIM.
+       P410-LE-MATERIA-FIM.
 
        P420-FECHA-ARQ.
-           CLOSE CONTATOS.
+           CLOSE MATERIAS.
        P420-FECHA-ARQ-FIM.
 
        P430-MONTA-TELA.
-           DISPLAY 'INFORME O CODIGO DO CONTATO: '
+           DISPLAY 'INFORME O CODIGO DO MATERIA: '
            END-DISPLAY.
-           ACCEPT ID-CONTATO
+           ACCEPT ID-MATERIA
            END-ACCEPT.
        P430-MONTA-TELA-FIM.
 
-       P440-MOSTRA-REGISTRO.
-           DISPLAY 'OS DADO DO CONTATO SAO: '
+       P440-MOSTRA-MATERIA.
+           DISPLAY 'OS DADO DO MATERIA SAO: '
            END-DISPLAY.
-           DISPLAY 'ID DO CONTATO..: ' WS-ID-CONTATO
-                   ' - NOME DO CONTATO: ' WS-NM-CONTATO
+           DISPLAY 'ID DO MATERIA..: ' WS-ID-MATERIA
+                   ' - NOME DO MATERIA: ' WS-NM-MATERIA
            END-DISPLAY.
-           DISPLAY 'DESEJA ALTERAR O NOME DO CONTATO?'
+           DISPLAY 'DESEJA ALTERAR O NOME DO MATERIA?'
            END-DISPLAY.
            ACCEPT WS-AUX-ALTERA
            END-ACCEPT.
            IF WS-AUX-ALTERA-OK THEN
-               PERFORM P460-ALTERA-REGISTRO
-                       THRU P460-ALTERA-REGISTRO-FIM
+               PERFORM P460-ALTERA-MATERIA
+                       THRU P460-ALTERA-MATERIA-FIM
            ELSE
                DISPLAY 'OS DADOS NAO FORAM ALTERADOS.'
                END-DISPLAY
            END-IF.
-       P440-MOSTRA-REGISTRO-FIM.
+       P440-MOSTRA-MATERIA-FIM.
 
        P450-REG-NAO-LOCALIZADO.
-           DISPLAY 'CONTATO NAO LOCALIZADO.'
+           DISPLAY 'MATERIA NAO LOCALIZADO.'
                    'TENTE UM CODIGO VALIDO.'
            END-DISPLAY.
        P450-REG-NAO-LOCALIZADO-FIM.
 
-       P460-ALTERA-REGISTRO.
-           DISPLAY 'DIGIGTE O NOVO NOME DO CONTATO: '
+       P460-ALTERA-MATERIA.
+           DISPLAY 'DIGIGTE O NOVO NOME DO MATERIA: '
            END-DISPLAY.
-           ACCEPT NM-CONTATO
+           ACCEPT NM-MATERIA
            END-ACCEPT.
-           REWRITE REG-CONTATOS
+           REWRITE REG-MATERIA
                INVALID KEY
                    PERFORM P800-ERRO   THRU P800-ERRO-FIM
                NOT INVALID KEY
-                   DISPLAY 'CONTATO ALTERADO COM SUCESSO.'
+                   DISPLAY 'MATERIA ALTERADO COM SUCESSO.'
                    END-DISPLAY
            END-REWRITE.
-       P460-ALTERA-REGISTRO-FIM.
+       P460-ALTERA-MATERIA-FIM.
 
        P800-ERRO.
            DISPLAY 'FILE STATUS: ' WS-FS
@@ -162,7 +165,7 @@
                DISPLAY 'ERRO. NAO ACHOU O ARQUIVO.'
                END-DISPLAY
            ELSE
-               DISPLAY 'NAO FOI POSSIVEL ATUALIZAR O REGISTRO.'
+               DISPLAY 'NAO FOI POSSIVEL ATUALIZAR O MATERIA.'
                END-DISPLAY
            END-IF
            PERFORM P900-FINALIZA  THRU P900-FINALIZA-FIM.
@@ -176,4 +179,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTA.
+       END PROGRAM NTMATALT.

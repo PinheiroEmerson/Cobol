@@ -1,12 +1,12 @@
       ******************************************************************
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      27/04/2022.
-      * Purpose:   CADASTRO DE CONTATOS.
+      * Purpose:   CADASTRO DE ALUNO.
       * Updata:    TRANSFORMADO DE EXECUTAVEL PARA MODULO
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTI.
+       PROGRAM-ID. NTALUIN.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -15,26 +15,29 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT CONTATOS
-           ASSIGN TO 'D:\My Documents\Cobol\Modulo3\bin\CONTATOS.DAT'
+           SELECT ALUNOS
+           ASSIGN TO
+           'D:\My Documents\Cobol\Modulo3\DesafioM3\ALUNOS.DAT'
            ORGANIZATION IS INDEXED
            ACCESS  MODE IS RANDOM
-           RECORD KEY IS ID-CONTATO
+           RECORD KEY IS ID-ALUNO
            FILE  STATUS IS WS-FS.
 
        DATA DIVISION.
        FILE SECTION.
-       FD  CONTATOS.
-           COPY FD_CONTT.
+       FD  ALUNOS.
+           COPY CFPK0001.
 
        WORKING-STORAGE SECTION.
+
+       01  WS-ALUNO                    PIC X(32) VALUE SPACES.
+       01  FILLER REDEFINES WS-ALUNO.
+           03 WS-ID-ALUNO              PIC 9(03).
+           03 WS-NM-ALUNO              PIC X(20).
+           03 WS-TL-ALUNO              PIC X(09).
+
        77  WS-FS                       PIC 99.
            88 WS-FS-OK                 VALUE 0.
-
-       01  WS-REGISTRO                 PIC X(22) VALUE SPACES.
-       01  FILLER REDEFINES WS-REGISTRO.
-           03 WS-ID-CONTATO            PIC 9(02).
-           03 WS-NM-CONTATO            PIC X(20).
 
        77  WS-EOF                      PIC X.
            88 WS-EOF-OK                VALUE 'S' FALSE 'N'.
@@ -60,7 +63,7 @@
        P100-INICIO.
            DISPLAY 'INICIO DO PROCESSAMENTO.'
            END-DISPLAY.
-           INITIALISE WS-FS WS-REGISTRO
+           INITIALISE WS-FS WS-ALUNO
                REPLACING NUMERIC       BY ZEROES
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
@@ -77,48 +80,48 @@
                    P410-GRAVA-REGISTRO-FIM
            DISPLAY 'TECLE: '
                    '<QUALQUER TECLA> PARA CONTINUAR, OU'
-                   '<S> PARA SAIR'
+                   ' <S> PARA SAIR'
            END-DISPLAY.
            ACCEPT WS-EXIT
            END-ACCEPT.
        P200-PROCESSA-FIM.
 
        P400-ABRE-ARQ.
-           OPEN I-O CONTATOS.
+           OPEN I-O ALUNOS.
       *VE SE O ARQUIVO EXISTE. SE NAO EXISTE (35) CRIA ARQUIVO.
            IF NOT WS-FS-OK THEN
-               OPEN OUTPUT CONTATOS
+               OPEN OUTPUT ALUNOS
            END-IF.
        P400-ABRE-ARQ-FIM.
 
        P410-GRAVA-REGISTRO.
-           MOVE WS-ID-CONTATO TO ID-CONTATO.
-           MOVE WS-NM-CONTATO TO NM-CONTATO.
+           MOVE WS-ID-ALUNO TO ID-ALUNO.
+           MOVE WS-NM-ALUNO TO NM-ALUNO.
 
-           WRITE REG-CONTATOS
+           WRITE REG-ALUNO
                INVALID KEY
-                   DISPLAY 'CONTATO JAH CADASTRADO.'
+                   DISPLAY 'ALUNO JAH CADASTRADO.'
                    END-DISPLAY
                NOT INVALID KEY
-                   DISPLAY'CONTATO SALVO COM SUCESSO.'
+                   DISPLAY'ALUNO SALVO COM SUCESSO.'
                    END-DISPLAY
            END-WRITE.
        P410-GRAVA-REGISTRO-FIM.
 
        P420-FECHA-ARQ.
-           CLOSE CONTATOS.
+           CLOSE ALUNOS.
        P420-FECHA-ARQ-FIM.
 
        P430-MONTA-TELA.
-           DISPLAY 'PARA REGISTRAR UM CONTATO, INFORME:'
+           DISPLAY 'PARA REGISTRAR UM ALUNO, INFORME:'
            END-DISPLAY.
            DISPLAY 'UM NUMERO PARA ID: '
            END-DISPLAY.
-           ACCEPT WS-ID-CONTATO
+           ACCEPT WS-ID-ALUNO
            END-ACCEPT.
-           DISPLAY 'UM NOME PARA O CONTATO: '
+           DISPLAY 'UM NOME PARA O ALUNO: '
            END-DISPLAY.
-           ACCEPT WS-NM-CONTATO
+           ACCEPT WS-NM-ALUNO
            END-ACCEPT.
        P430-MONTA-TELA-FIM.
 
@@ -138,4 +141,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTI.
+       END PROGRAM NTALUIN.

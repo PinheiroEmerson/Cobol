@@ -1,12 +1,12 @@
       ******************************************************************
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      29/04/2022.
-      * Purpose:   LISTAGEM DE CONTATOS.
+      * Purpose:   LISTAGEM DE ALUNOS.
       * Update:    TRANSFORMADO DE EXECUTAVEL EM MODULO.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTL.
+       PROGRAM-ID. NTALULIS.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -15,31 +15,35 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT CONTATOS
-           ASSIGN TO 'D:\My Documents\Cobol\Modulo3\bin\CONTATOS.DAT'
+           SELECT ALUNOS
+           ASSIGN TO
+               'D:\My Documents\Cobol\Modulo3\DesafioM3\ALUNOS.DAT'
            ORGANIZATION IS INDEXED
            ACCESS  MODE IS SEQUENTIAL
-           RECORD KEY IS ID-CONTATO
+           RECORD KEY IS ID-ALUNO
            FILE  STATUS IS WS-FS.
 
        DATA DIVISION.
        FILE SECTION.
-       FD  CONTATOS.
-           COPY FD_CONTT.
+       FD  ALUNOS.
+           COPY CFPK0001.
 
        WORKING-STORAGE SECTION.
-       77  WS-FS                       PIC 99.
-           88 WS-FS-OK                 VALUE 0.
 
-       01  WS-REGISTRO                 PIC X(22) VALUE SPACES.
-       01  FILLER REDEFINES WS-REGISTRO.
-           03 WS-ID-CONTATO            PIC 9(02).
-           03 WS-NM-CONTATO            PIC X(20).
+       01  WS-ALUNO                   PIC X(32) VALUE SPACES.
+       01  FILLER REDEFINES WS-ALUNO.
+           03 WS-ID-ALUNO             PIC 9(03).
+           03 WS-NM-ALUNO             PIC X(20).
+           03 WS-TL-ALUNO             PIC X(09).
 
        77  WS-EOF                      PIC X.
            88 WS-EOF-OK                VALUE 'S' FALSE 'N'.
 
        77  WS-CONTA-REG                PIC 9(04) VALUE ZEROS.
+
+       77  WS-FS                       PIC 99.
+           88 WS-FS-OK                 VALUE 0.
+
 
        LINKAGE SECTION.
        01  LK-COM-AREA.
@@ -56,7 +60,7 @@
        P100-INICIO.
            DISPLAY 'INICIO DO PROCESSAMENTO.'
            END-DISPLAY.
-           INITIALISE WS-FS WS-REGISTRO WS-CONTA-REG
+           INITIALISE WS-FS WS-ALUNO WS-CONTA-REG
                REPLACING NUMERIC       BY ZEROES
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
@@ -74,14 +78,14 @@
 
        P400-ABRE-ARQ.
       *VE SE O ARQUIVO EXISTE.
-           OPEN INPUT CONTATOS.
+           OPEN INPUT ALUNOS.
            IF NOT WS-FS-OK THEN
                PERFORM P800-ERRO        THRU P800-ERRO-FIM
            END-IF.
        P400-ABRE-ARQ-FIM.
 
        P410-LE-REGISTRO.
-           READ CONTATOS INTO WS-REGISTRO
+           READ ALUNOS INTO WS-ALUNO
                AT END
                    SET WS-EOF-OK TO TRUE
                NOT AT END
@@ -91,14 +95,14 @@
        P410-LE-REGISTRO-FIM.
 
        P420-FECHA-ARQ.
-           CLOSE CONTATOS.
+           CLOSE ALUNOS.
        P420-FECHA-ARQ-FIM.
 
        P430-LISTA-REGISTRO.
            ADD 1 TO WS-CONTA-REG.
            DISPLAY 'REGISTRO: ' WS-CONTA-REG
-                   ' - CONTATO ID: ' WS-ID-CONTATO
-                   ' - CONTATO NOME: ' WS-NM-CONTATO
+                   ' - ALUNO ID: ' WS-ID-ALUNO
+                   ' - ALUNO NOME: ' WS-NM-ALUNO
            END-DISPLAY.
        P430-LISTA-REGISTRO-FIM.
 
@@ -117,4 +121,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTL.
+       END PROGRAM NTALULIS.

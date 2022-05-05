@@ -1,12 +1,12 @@
       ******************************************************************
       * Author:    EMERSON PINHEIRO - EMAIL. TIO.EL@OUTLOOK.COM.
       * Date:      29/04/2022.
-      * Purpose:   LISTAGEM DE CONTATOS.
+      * Purpose:   LISTAGEM DE CONTATOS APOS SORT.
       * Update:    TRANSFORMADO DE EXECUTAVEL EM MODULO.
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CADCONTL.
+       PROGRAM-ID. CADCOUT.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -16,7 +16,8 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT CONTATOS
-           ASSIGN TO 'D:\My Documents\Cobol\Modulo3\bin\CONTATOS.DAT'
+           ASSIGN TO
+                  'D:\My Documents\Cobol\Modulo3\Sort\CONTSORT.DAT'
            ORGANIZATION IS INDEXED
            ACCESS  MODE IS SEQUENTIAL
            RECORD KEY IS ID-CONTATO
@@ -41,12 +42,7 @@
 
        77  WS-CONTA-REG                PIC 9(04) VALUE ZEROS.
 
-       LINKAGE SECTION.
-       01  LK-COM-AREA.
-           03 WS-COM-MENSAGEM          PIC X(40).
-
-       PROCEDURE DIVISION
-           USING LK-COM-AREA.
+       PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM P100-INICIO     THRU P100-INICIO-FIM.
            PERFORM P200-PROCESSA   THRU P200-PROCESSA-FIM.
@@ -60,7 +56,7 @@
                REPLACING NUMERIC       BY ZEROES
                          ALPHANUMERIC  BY SPACES.
            SET WS-EOF-OK               TO FALSE.
-           DISPLAY WS-COM-MENSAGEM
+           DISPLAY 'LISTA ARQUIVO APOS SORT'
            END-DISPLAY.
        P100-INICIO-FIM.
 
@@ -117,4 +113,4 @@
            GOBACK.
        P900-FINALIZA-FIM.
 
-       END PROGRAM CADCONTL.
+       END PROGRAM CADCOUT.
