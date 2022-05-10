@@ -15,13 +15,16 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       01  WS-TABELA.
-           03 WS-REGISTRO                 OCCURS 5 TIMES
-                                          ASCENDING KEY WS-CHAVE
-                                          INDEXED   BY  I.
-               05 WS-CHAVE                PIC 99.
-               05 WS-NOME                 PIC X(06).
-       77  WS-CODIGO                      PIC 99.
+       77  WS-CODIGO                      PIC 9.
+       77  WS-ALFA                        PIC X.
+       01  WS-CALCULA.
+           05 WS-NR01                     PIC S9(02).
+           05 WS-NR02                     PIC S9(02).
+
+       01  WS-STATUS                      PIC 99.
+           88 WS-VERDADEIRO               VALUE 1, 2.
+           88 WS-FALSO                    VALUE 0, 3 THRU 5.
+           88 WS-OUTRO                    VALUE 6    THRU 9, 15.
 
        PROCEDURE DIVISION.
 
@@ -29,41 +32,89 @@
 
            PERFORM P100-INICIO   THRU P100-INICIO-FIM.
 
-           PERFORM P200-PROCESSA THRU P200-PROCESSA-FIM
-                   UNTIL WS-CODIGO EQUALS TO 99.
+           PERFORM P200-PROCESSA THRU P200-PROCESSA-FIM.
 
            PERFORM P900-FINALIZA THRU P900-FINALIZA-FIM.
 
        PROCEDURE-MAIN-FIM.
 
        P100-INICIO.
-           INITIALISE  WS-TABELA WS-CODIGO
-               REPLACING NUMERIC       BY ZEROES
-                         ALPHANUMERIC  BY SPACES.
-           MOVE '01MARCOS02CARLOS03MARINA04ANA   05LOPES'
-               TO WS-TABELA.
 
            DISPLAY "INICIO PROCESSAMENTO.".
+           DISPLAY 'DIGITE O WS-CODIGO:'
+           ACCEPT WS-CODIGO.
+           DISPLAY 'DIGITE O WS-ALFA:'
+           ACCEPT WS-ALFA.
+           DISPLAY 'DIGITE O WS-STATUS:'
+           ACCEPT WS-STATUS.
+           DISPLAY 'DIGITE UM NUMERO:'
+           ACCEPT WS-NR01.
+           DISPLAY 'DIGITE OUTRO NUMERO:'
+           ACCEPT WS-NR02.
        P100-INICIO-FIM.
 
        P200-PROCESSA.
-           DISPLAY 'PARA SAIR INFORME CODIGO IGUAL <99> '.
-           DISPLAY 'INFORME O CÓDIGO PARA BUSCA: '.
-           ACCEPT WS-CODIGO.
-           IF WS-CODIGO NOT EQUALS TO 99 THEN
-           SEARCH ALL WS-REGISTRO
-                  AT END
-                     DISPLAY 'DADO NAO ENCONTRADO'
-                  WHEN WS-CHAVE(WS-CODIGO) EQUALS TO WS-CODIGO
-                     DISPLAY 'ENCONTRADO: ' WS-CHAVE(WS-CODIGO)
-                             ' - '          WS-NOME(WS-CODIGO)
-                             ' POSICAO: '   WS-CODIGO
-           END-SEARCH.
+           IF WS-CODIGO EQUALS TO ZERO THEN
+               DISPLAY 'VOCE DIGITOU ZERO'
+           ELSE
+               DISPLAY 'VOCE DIGITOU MAIOR QUE ZERO'
+           END-IF.
+           IF WS-ALFA EQUALS TO 'A' THEN
+               DISPLAY 'VOCE DIGITOU A'
+           ELSE
+               DISPLAY 'VOCE DIGITOU OUTRA LETRA'
+           END-IF.
+           IF WS-CODIGO IS NUMERIC THEN
+               DISPLAY 'WS-CODIGO E NUMERICO'
+           END-IF.
+           IF WS-ALFA IS ALPHABETIC THEN
+               DISPLAY 'WS-ALFA E ALFABETICO'
+           END-IF.
+
+           IF WS-VERDADEIRO THEN
+               DISPLAY 'VERDADE'
+           END-IF.
+
+           IF WS-FALSO THEN
+               DISPLAY 'FALSO'
+           END-IF.
+
+           IF WS-OUTRO THEN
+               DISPLAY 'OUTRO'
+           END-IF.
+
+           IF WS-NR01 IS GREATER THAN WS-NR02
+               DISPLAY 'NR01 E MAIOR QUE NR02'
+           END-IF.
+           IF WS-NR01 EQUALS TO WS-NR02
+               DISPLAY 'NR01 E IGUAL A NR02'
+           END-IF.
+           IF WS-NR01 IS LESS THAN WS-NR02
+               DISPLAY 'NR01 E MENOR QUE NR02'
+           END-IF.
+           IF WS-NR01 IS NOT POSITIVE THEN
+               DISPLAY 'NAO POSITIVO'
+           END-IF.
+           IF WS-NR01 IS POSITIVE THEN
+               DISPLAY 'POSITIVO'
+           END-IF.
+           IF WS-NR01 IS NOT NEGATIVE THEN
+               DISPLAY 'NAO NEGATIVO'
+           END-IF.
+           IF WS-NR01 IS NEGATIVE THEN
+               DISPLAY 'NEGATIVO'
+           END-IF.
+           IF WS-NR01 IS GREATER THAN (WS-NR01 * WS-NR02)
+               DISPLAY 'VALOR WS-NR01  MAIOR'
+           ELSE
+               DISPLAY 'VALOR WS-NR01  WS-NR02'
+           END-IF.
+
        P200-PROCESSA-FIM.
 
        P350-ERRO.
-           DISPLAY 'MEIO DO PROCESSAMENTO...'.
-      *     DISPLAY "ERRO NO CALCULO.........:" WS-VALOR.
+           DISPLAY 'ERRO DO PROCESSAMENTO...'.
+
            PERFORM P900-FINALIZA THRU P900-FINALIZA-FIM.
        P350-ERRO-FIM.
 
